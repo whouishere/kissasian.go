@@ -13,9 +13,9 @@ import (
 const watchedFile = "watched.txt"
 
 func UpdateEpisode(episode int) {
-	file, err := os.OpenFile(watchedFile, os.O_RDWR|os.O_CREATE, 0666)
-	if err != nil {
-		log.Fatal(err)
+	file, fileErr := os.OpenFile(watchedFile, os.O_RDWR|os.O_CREATE, 0666)
+	if fileErr != nil {
+		log.Fatal(fileErr)
 	}
 	defer file.Close()
 
@@ -31,7 +31,18 @@ func UpdateEpisode(episode int) {
 }
 
 func GetWatchedEpisode() int {
-	watchedEp, err := strconv.Atoi(readFileLines(watchedFile)[0])
+	epStr, err := readFileLines(watchedFile)
+
+	// if previously there wasn't a watched cache and it was just created,
+	// the file will return nil, which then we need to put something first
+	if err != nil {
+		log.Fatal(err)
+	} else if epStr == nil {
+		UpdateEpisode(0)
+		return 0
+	}
+
+	watchedEp, err := strconv.Atoi(epStr[0])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -84,11 +95,10 @@ func popLine(f *os.File) ([]byte, error) {
 	return line, nil
 }
 
-func readFileLines(filename string) []string {
-	file, err := os.Open(filename)
+func readFileLines(filename string) ([]string, error) {
+	file, err := os.OpenFile(filename, os.O_RDONLY|os.O_CREATE, 0666)
 	if err != nil {
-		fmt.Printf("\nCouldn't open file '%s'. Error:\n%s\n", filename, err)
-		return nil
+		return nil, err
 	}
 	defer file.Close()
 
@@ -105,5 +115,5 @@ func readFileLines(filename string) []string {
 		fmt.Printf("\n'%s' scanner got an error. Error:\n%s\n", filename, err)
 	}
 
-	return content
+	return content, err
 }
