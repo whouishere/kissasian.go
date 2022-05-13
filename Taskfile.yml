@@ -1,0 +1,39 @@
+version: '3'
+
+env:
+  VERSION: 0.1
+  BIN_DIR: ./bin
+  BINARY: kissasiandb{{exeExt}}
+
+tasks:
+  build:
+    desc: Builds the binary
+    cmds:
+      - go build -v -ldflags="-X main.Version=$VERSION" -o $BIN_DIR/$BINARY $SRC
+    
+    env:
+      SRC: main.go
+  
+  run:
+    desc: Builds the binary and runs the project
+    deps: [build]
+    cmds: 
+      - $BIN_DIR/$BINARY
+
+  test:
+    desc: Uses 'go test' to test the project
+    cmds: 
+      - go test -v $SRC
+    
+    env:
+      SRC: main.go
+  
+  clean:
+    desc: Deletes project binaries
+    cmds:
+      - rm -f $BIN_DIR/$BINARY
+  
+  cleandata: 
+    desc: Deletes shareable project data
+    cmds:
+      - rm -f $BIN_DIR/watched.txt

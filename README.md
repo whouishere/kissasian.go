@@ -5,17 +5,18 @@ A simple webscraper for [kissasiandb](https://kissasiandb.com), meant for educat
 For now the program will only look for a hard-coded show on the site. In which you can easily change on `scraper/scraper.go`.
 
 ## Building
-### Using GNU's `make`
-You can do a simple build with  `make` using
+If you want to build this the easy way, I recommend you to use [Task](https://github.com/go-task/task)It's a simple tool and it integrates very well with Go.
+
+To build the project with it, just be sure to be inside the project directory an run
 
 ```
-make build
+task build
 ```
 
 and a `kissasiandb` binary will be built on the `bin` folder.
 
 ### Using Go directly
-If you don't have `make`, or it simply doesn't work for you, you may use the Go command-line it directly.
+If you don't have or don't want to use Task, you can use the Go command-line it directly.
 
 Run it simply as
 

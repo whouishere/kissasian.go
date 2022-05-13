@@ -8,10 +8,10 @@ import (
 	"github.com/whouishere/kissasiandb/scraper"
 )
 
-var version string = "dev-snapshot"
+var Version string = "DEV"
 
 func main() {
-	fmt.Printf("Version %s\n\n", version)
+	fmt.Printf("Version %s\n\n", Version)
 
 	scraper.ConnectToEpisodeList()
 
