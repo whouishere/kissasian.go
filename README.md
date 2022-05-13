@@ -5,7 +5,7 @@ A simple webscraper for [kissasiandb](https://kissasiandb.com), meant for educat
 For now the program will only look for a hard-coded show on the site. In which you can easily change on `scraper/scraper.go`.
 
 ## Building
-If you want to build this the easy way, I recommend you to use [Task](https://github.com/go-task/task)It's a simple tool and it integrates very well with Go.
+If you want to build this the easy way, I recommend you to use [Task](https://github.com/go-task/task). It's a simple tool and it integrates very well with Go.
 
 To build the project with it, just be sure to be inside the project directory an run
 
