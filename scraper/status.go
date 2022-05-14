@@ -3,17 +3,21 @@ package scraper
 import (
 	"bufio"
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
-const watchedFile = "watched.txt"
+const statusFile = "kissasiandb.status"
+
+var statusFilePath string
 
 func UpdateEpisode(episode int) {
-	file, fileErr := os.OpenFile(watchedFile, os.O_RDWR|os.O_CREATE, 0666)
+	file, fileErr := os.OpenFile(statusFilePath, os.O_RDWR|os.O_CREATE, 0666)
 	if fileErr != nil {
 		log.Fatal(fileErr)
 	}
@@ -31,7 +35,8 @@ func UpdateEpisode(episode int) {
 }
 
 func GetWatchedEpisode() int {
-	epStr, err := readFileLines(watchedFile)
+	statusFilePath = getFileDir()
+	epStr, err := readFileLines(statusFilePath)
 
 	// if previously there wasn't a watched cache and it was just created,
 	// the file will return nil, which then we need to put something first
@@ -116,4 +121,47 @@ func readFileLines(filename string) ([]string, error) {
 	}
 
 	return content, err
+}
+
+// checks where does status file exists
+func getFileDir() string {
+	cwDir, err := os.Getwd() // current working directory
+	if err != nil {
+		log.Fatal(err)
+	}
+	homeDir, err := os.UserHomeDir() // user home directory
+	if err != nil {
+		log.Fatal(err)
+	}
+	cacheDir, err := os.UserCacheDir() // user cache directory
+	if err != nil {
+		log.Fatal(err)
+	}
+	execDir, err := filepath.Abs(filepath.Dir(os.Args[0])) // executable directory
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	possibleDirs := []string{
+		cwDir,
+		homeDir,
+		cacheDir,
+		execDir,
+	}
+
+	var absoluteFilePath string
+
+	// search for the status file on possibleDirs directories (in order)
+	// first one to be found is returned
+	for _, dir := range possibleDirs {
+		_, err := os.Stat(filepath.Join(dir, statusFile))
+		if err != nil {
+			if !errors.Is(err, os.ErrNotExist) {
+				log.Fatal(err)
+			}
+		}
+		absoluteFilePath = filepath.Join(dir, statusFile)
+	}
+
+	return absoluteFilePath
 }
