@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/whouishere/kissasiandb/status"
+	"github.com/whouishere/kissasian.go/status"
 )
 
 var NewEpisodeReleased bool

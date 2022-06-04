@@ -12,7 +12,7 @@ import (
 	"strconv"
 )
 
-const statusFile = "kissasiandb.status"
+const statusFile = "kissasian.status"
 
 var statusFilePath string
 

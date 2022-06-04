@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/whouishere/kissasiandb/scraper"
+	"github.com/whouishere/kissasian.go/scraper"
 )
 
 var Version string = "DEV"

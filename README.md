@@ -1,6 +1,6 @@
-# kissasiandb
+# kissasian.go
 
-A simple webscraper for [kissasiandb](https://kissasiandb.com), meant for educational purposes.
+A simple webscraper for [KissAsian](https://kissasian.fan), meant for educational purposes.
 
 For now the program will only look for a hard-coded show on the site. In which you can easily change on `main.go`. You can even change to another website, as long as you write the scraper function yourself.
 
@@ -13,7 +13,7 @@ To build the project with it, just be sure to be inside the project directory an
 task build
 ```
 
-and a `kissasiandb` binary will be built on the `bin` folder.
+and a `kissasian` binary will be built on the `bin` folder.
 
 ### Using Go directly
 If you don't have or don't want to use Task, you can use the Go command-line directly.
@@ -21,7 +21,7 @@ If you don't have or don't want to use Task, you can use the Go command-line dir
 Run it simply as
 
 ```
-go build -o main.go bin/kissasiandb
+go build -o main.go bin/kissasian
 ```
 
 __DISCLAIMER__: If you're on Windows, you need to insert `.exe` at the end of the command in order to execute the binary.

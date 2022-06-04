@@ -1,4 +1,4 @@
-module github.com/whouishere/kissasiandb
+module github.com/whouishere/kissasian.go
 
 go 1.18
 
