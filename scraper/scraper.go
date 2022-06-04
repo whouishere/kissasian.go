@@ -38,21 +38,21 @@ func (show Show) ConnectToEpisodeList() {
 		log.Fatal(err)
 	}
 
-	show.lastEpisode = status.GetWatchedEpisode()
+	LastEpisode = status.GetWatchedEpisode()
 
 	fmt.Printf("Fetching '%s' episode list...\n", show.name)
 	doc.Find(show.episodeListElement).Each(show.getEpisode)
 
 	// this doesn't consider more than one new episodes. might need to fix that later
-	if show.newEpisodeReleased {
+	if NewEpisodeReleased {
 		input := bufio.NewScanner(os.Stdin)
-		fmt.Print("New episode released (", show.newEpisode, ")! Do you want to mark it as watched? (Y/N) ")
+		fmt.Print("New episode released (", NewEpisode, ")! Do you want to mark it as watched? (Y/N) ")
 		input.Scan()
 		answer := input.Text()
 
 		if strings.EqualFold(answer, "y") || strings.EqualFold(answer, "yes") {
-			status.UpdateEpisode(show.newEpisode)
-			show.lastEpisode = show.newEpisode
+			status.UpdateEpisode(NewEpisode)
+			LastEpisode = NewEpisode
 		} else if strings.EqualFold(answer, "n") || strings.EqualFold(answer, "no") {
 			return
 		}
