@@ -1,6 +1,6 @@
 # kissasian.go
 
-A simple webscraper for [KissAsian](https://kissasian.fan), meant for educational purposes.
+A simple webscraper for [KissAsian](https://kissasian.li), meant for educational purposes.
 
 For now the program will only look for a hard-coded show on the site. In which you can easily change on `main.go`. You can even change to another website, as long as you write the scraper function yourself.
 
