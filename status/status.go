@@ -1,4 +1,4 @@
-package scraper
+package status
 
 import (
 	"bufio"

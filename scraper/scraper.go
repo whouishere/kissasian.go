@@ -6,23 +6,23 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/whouishere/kissasiandb/status"
 )
 
-const episodeListUrl = "https://kissasiandb.com/tvshows/soredemo-ai-wo-chikaimasu-ka-2021/"
-const episodePageBaseUrl = "https://kissasiandb.com/soredemo-ai-wo-chikaimasu-ka-2021-episode-"
-const showName = "Soredemo Ai wo Chikaimasu ka?"
-const listElement = "#all-episodes .list li"
+var NewEpisodeReleased bool
+var LastEpisode int
+var NewEpisode int
 
-var newEpisodeReleased bool
-var lastEpisode int
-var newEpisode int
+type ShowInterface interface {
+	ConnectToEpisodeList()
+	CheckForEpisodePage()
+}
 
-func ConnectToEpisodeList() {
-	res, err := http.Get(episodeListUrl)
+func (show Show) ConnectToEpisodeList() {
+	res, err := http.Get(show.episodeListUrl)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -31,59 +31,36 @@ func ConnectToEpisodeList() {
 	if res.StatusCode != 200 {
 		log.Fatalf("%d error: %s", res.StatusCode, res.Status)
 	}
-	fmt.Println("Connected to kissasiandb.com")
+	fmt.Println("Connected to ", show.indexerUrl)
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	lastEpisode = GetWatchedEpisode()
+	show.lastEpisode = status.GetWatchedEpisode()
 
-	fmt.Printf("Fetching '%s' episode list...\n", showName)
-	doc.Find(listElement).Each(checkForEpisodeList)
+	fmt.Printf("Fetching '%s' episode list...\n", show.name)
+	doc.Find(show.episodeListElement).Each(show.getEpisode)
 
 	// this doesn't consider more than one new episodes. might need to fix that later
-	if newEpisodeReleased {
+	if show.newEpisodeReleased {
 		input := bufio.NewScanner(os.Stdin)
-		fmt.Print("New episode released (", newEpisode, ")! Do you want to mark it as watched? (Y/N) ")
+		fmt.Print("New episode released (", show.newEpisode, ")! Do you want to mark it as watched? (Y/N) ")
 		input.Scan()
 		answer := input.Text()
 
 		if strings.EqualFold(answer, "y") || strings.EqualFold(answer, "yes") {
-			UpdateEpisode(newEpisode)
-			lastEpisode = newEpisode
+			status.UpdateEpisode(show.newEpisode)
+			show.lastEpisode = show.newEpisode
 		} else if strings.EqualFold(answer, "n") || strings.EqualFold(answer, "no") {
 			return
 		}
 	}
 }
 
-func checkForEpisodeList(i int, s *goquery.Selection) {
-	episode := s.Find("h3").Text()
-	episodeUrl, exists := s.Find("h3 a").Attr("href")
-
-	if exists {
-		fmt.Printf("%s -> %s\n\n", episode, episodeUrl)
-	} else {
-		fmt.Printf("%s -> URL not found.\n\n", episode)
-	}
-
-	episodeInt, err := strconv.Atoi(string([]rune(episodeUrl)[len(episodeUrl)-2]))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if episodeInt > lastEpisode {
-		newEpisodeReleased = true
-		newEpisode = episodeInt
-	} else {
-		newEpisodeReleased = false
-	}
-}
-
-func CheckForEpisodePage(episode int) {
-	fullUrl := episodePageBaseUrl + fmt.Sprint(episode) + "/"
+func (show Show) CheckForEpisodePage(episode int) {
+	fullUrl := show.episodePageBaseUrl + fmt.Sprint(episode) + "/"
 	res, err := http.Get(fullUrl)
 	if err != nil {
 		log.Fatal(err)
