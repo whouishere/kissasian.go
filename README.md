@@ -2,7 +2,7 @@
 
 A simple webscraper for [kissasiandb](https://kissasiandb.com), meant for educational purposes.
 
-For now the program will only look for a hard-coded show on the site. In which you can easily change on `scraper/scraper.go`.
+For now the program will only look for a hard-coded show on the site. In which you can easily change on `main.go`. You can even change to another website, as long as you write the scraper function yourself.
 
 ## Building
 If you want to build this the easy way, I recommend you to use [Task](https://github.com/go-task/task). It's a simple tool and it integrates very well with Go.
@@ -24,4 +24,4 @@ Run it simply as
 go build -o main.go bin/kissasiandb
 ```
 
-__DISCLAIMER__: If you're on Windows, you need to insert `.exe` at the end of the command in order to execute it.
+__DISCLAIMER__: If you're on Windows, you need to insert `.exe` at the end of the command in order to execute the binary.
